@@ -39,10 +39,40 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const usersCollection = client.db("academy").collection("users");
     const classesCollection = client.db("academy").collection("classes");
+    const instructorCollection = client.db("academy").collection("instructor");
+
+
+    app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email }
+      const existingUser = await usersCollection.findOne(query);
+
+      if (existingUser) {
+        return res.send({ message: 'user already exists' })
+      }
+
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+
+
+
 
     app.get('/classes', async(req, res)=>{
         const result = await classesCollection.find().toArray();
+        res.send(result);
+    })
+
+    app.get('/instructor', async(req, res)=>{
+        const result = await instructorCollection.find().toArray();
         res.send(result);
     })
 
