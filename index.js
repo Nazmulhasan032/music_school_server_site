@@ -13,11 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
-
-
-
-
 app.get('/', (req, res)=>{
     res.send('server is running');
 })
@@ -43,6 +38,16 @@ async function run() {
     const usersCollection = client.db("academy").collection("users");
     const classesCollection = client.db("academy").collection("classes");
     const instructorCollection = client.db("academy").collection("instructor");
+
+
+
+
+    app.post('/jwt', (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.JWT_TOKEN, { expiresIn: '1h' })
+
+      res.send({ token })
+    })
 
     // verifyJWT, verifyAdmin,
     app.get('/users',  async (req, res) => {
