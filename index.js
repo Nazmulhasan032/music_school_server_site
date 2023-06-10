@@ -32,8 +32,8 @@ app.use(express.json());
 // }
 
 
-app.get('/', (req, res)=>{
-    res.send('server is running');
+app.get('/', (req, res) => {
+  res.send('server is running');
 })
 
 
@@ -72,7 +72,7 @@ async function run() {
     })
 
     // verifyJWT, verifyAdmin,
-    app.get('/users',  async (req, res) => {
+    app.get('/users', async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
@@ -106,8 +106,28 @@ async function run() {
 
     })
 
-// student enroll class saved api-------
-    app.post('/enroll', async(req,res)=>{
+    // student enroll class saved api-------
+    verifyJWT,
+    app.get('/carts', async (req, res) => {
+      const email = req.query.email;
+
+      if (!email) {
+        res.send([]);
+      }
+
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res.status(403).send({ error: true, message: 'forbidden access' })
+      }
+
+      const query = { email: email };
+      const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    });
+
+
+
+    app.post('/enroll', async (req, res) => {
       const enrollClass = req.body;
       const result = await enrollCollection.insertOne(enrollClass);
       res.send(result);
@@ -117,25 +137,25 @@ async function run() {
 
 
 
-    app.get('/classes', async(req, res)=>{
-        const result = await classesCollection.find().toArray();
-        res.send(result);
+    app.get('/classes', async (req, res) => {
+      const result = await classesCollection.find().toArray();
+      res.send(result);
     })
 
-    app.get('/allclass', async(req, res)=>{
-        const result = await allClassCollection.find().toArray();
-        res.send(result);
+    app.get('/allclass', async (req, res) => {
+      const result = await allClassCollection.find().toArray();
+      res.send(result);
     })
 
-    app.get('/instructor', async(req, res)=>{
-        const result = await instructorCollection.find().toArray();
-        res.send(result);
+    app.get('/instructor', async (req, res) => {
+      const result = await instructorCollection.find().toArray();
+      res.send(result);
     })
 
 
-    app.get('/allinstructor', async(req, res)=>{
-        const result = await allInstructorCollection.find().toArray();
-        res.send(result);
+    app.get('/allinstructor', async (req, res) => {
+      const result = await allInstructorCollection.find().toArray();
+      res.send(result);
     })
 
 
@@ -166,6 +186,6 @@ run().catch(console.dir);
 
 
 
-app.listen(port, ()=>{
-    console.log(`server is running on ${port}`);
+app.listen(port, () => {
+  console.log(`server is running on ${port}`);
 })
