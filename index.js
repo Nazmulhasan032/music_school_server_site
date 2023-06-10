@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -43,8 +44,8 @@ async function run() {
     const classesCollection = client.db("academy").collection("classes");
     const instructorCollection = client.db("academy").collection("instructor");
 
-
-    app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
+    // verifyJWT, verifyAdmin,
+    app.get('/users',  async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
