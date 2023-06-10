@@ -106,22 +106,22 @@ async function run() {
 
     })
 
-    // student enroll class saved api-------
-    verifyJWT,
-    app.get('/carts', async (req, res) => {
+    // student enroll class api-------
+    // verifyJWT,
+    app.get('/enroll', async (req, res) => {
       const email = req.query.email;
 
       if (!email) {
         res.send([]);
       }
 
-      const decodedEmail = req.decoded.email;
-      if (email !== decodedEmail) {
-        return res.status(403).send({ error: true, message: 'forbidden access' })
-      }
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ error: true, message: 'forbidden access' })
+      // }
 
       const query = { email: email };
-      const result = await cartCollection.find(query).toArray();
+      const result = await enrollCollection.find(query).toArray();
       res.send(result);
     });
 
@@ -130,6 +130,13 @@ async function run() {
     app.post('/enroll', async (req, res) => {
       const enrollClass = req.body;
       const result = await enrollCollection.insertOne(enrollClass);
+      res.send(result);
+    })
+
+    app.delete('/enroll/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await enrollCollection.deleteOne(query);
       res.send(result);
     })
 
