@@ -145,7 +145,7 @@ async function run() {
 
 
     // student enroll class api-------
-    // verifyJWT,
+    
     app.get('/enroll',verifyJWT, async (req, res) => {
       const email = req.query.email;
 
@@ -179,7 +179,7 @@ async function run() {
     })
 
 
-
+// payment er api
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
       const { price } = req.body;
       const amount = parseInt(price * 100);
@@ -212,6 +212,12 @@ async function run() {
     app.post('/allclass', async (req, res) => {
       const newItem = req.body;
       const result = await allClassCollection.insertOne(newItem)
+      res.send(result);
+    })
+    app.delete('/allclass/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await allClassCollection.deleteOne(query);
       res.send(result);
     })
 
